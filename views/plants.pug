@@ -1,5 +1,3 @@
-//- ** This is a sample of a pug template and how it uses the data passed to it from index.js.
-
 // doctype html
 html 
     head 
@@ -8,8 +6,15 @@ html
         link(rel="stylesheet", href="/css/style.css")
     body    
         h1 Plants
-        .cards 
-            each plant in data
-                .card 
-                    h2.card__name #{plant.properties.name}
-                    p.card__email #{plant.properties.description}
+        table
+            thead
+                tr
+                    th Name
+                    th Description
+                    th Scientific Name
+            tbody
+                each plant in data
+                    tr
+                        td #{plant.properties.name}
+                        td #{plant.properties.description}
+                        td #{plant.properties.scientific_name}

@@ -15,7 +15,7 @@ const PRIVATE_APP_ACCESS = process.env.PRIVATE_APP_ACCESS;
 
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 app.get('/', async (req, res) => {
-    const customObject = 'https://api.hubspot.com/crm/v3/objects/plants?properties=name,description';
+    const customObject = 'https://api.hubspot.com/crm/v3/objects/plants?properties=name,description,scientific_name';
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
         'Content-Type': 'application/json'
@@ -32,11 +32,52 @@ app.get('/', async (req, res) => {
 
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
 
-// app.get('/create', (req, res) => {
+app.get('/update-cobj', async (req, res) => {
+    const customObject = 'https://api.hubspot.com/crm/v3/objects/plants?properties=name,description,scientific_name';
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        'Content-Type': 'application/json'
+    }
+    try {
+        const resp = await axios.get(customObject, { headers });
+        const data = resp.data.results;
+        res.render('updates', { title: 'Update Custom Object | HubSpot APIs', data });
+    }
+    catch (error) {
+        console.error(error);
+    }
+});
+
 // TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
 
-// * Code for Route 3 goes here
+app.post('/update-cobj', async (req, res) => {
+    const update = {
+        properties: {
+            "name": req.body.name,
+            "description": req.body.description,
+            "scientific_name": req.body.scientific_name
+        }
+    }
 
+    const objectId = req.query.objectId;
+    const url = objectId 
+        ? `https://api.hubapi.com/crm/v3/objects/plants/${objectId}`
+        : 'https://api.hubapi.com/crm/v3/objects/plants';
+    const method = objectId ? 'patch' : 'post';
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        'Content-Type': 'application/json'
+    };
+
+    try {
+        await axios({ method, url, data: update, headers });
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }   
+    }
+);
 /** 
 * * This is sample code to give you a reference for how you should structure your calls. 
 

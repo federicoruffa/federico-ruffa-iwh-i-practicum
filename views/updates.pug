@@ -1,0 +1,19 @@
+//The HTML form should have fields to create a new CRM record with the three custom properties you created.
+
+head 
+    title= `${title}`
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="/css/style.css")
+body
+form(action="/update-cobj" method="post").update-form
+  div
+    label(for="name") Name:
+    input(type="text" id="name" name="name" required)
+  div
+    label(for="description") Description:
+    input(type="text" id="description" name="description" required)
+  div
+    label(for="scientific_name") Scientific Name:
+    input(type="text" id="scientific_name" name="scientific_name" required)
+  div
+    button(type="submit") Create Record
